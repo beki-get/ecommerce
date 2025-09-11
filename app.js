@@ -22,7 +22,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:3000", // React app URL
+  origin: "https://ecommerce-frontend-9kyz.onrender.com", // React app URL
   credentials: true, // if you need cookies
 }));
 app.use(express.json());
@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 
 //frontend CORS configuration
 app.use(cors({
-  origin: "http://localhost:3000", // React frontend URL
+  origin: "https://ecommerce-frontend-9kyz.onrender.com", // React frontend URL
   credentials: true
 }));
 

@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
 
     await user.save();
 
-    const verificationUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/verify-email/${token}`;
+    const verificationUrl = `${process.env.CLIENT_URL || 'https://ecommerce-frontend-9kyz.onrender.com'}/verify-email/${token}`;
 
     await sendEmail({
       to: user.email,
@@ -138,7 +138,7 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/reset-password/${token}`;
+    const resetUrl = `${process.env.CLIENT_URL || 'https://ecommerce-frontend-9kyz.onrender.com'}/reset-password/${token}`;
 
     await sendEmail({
       to: user.email,
