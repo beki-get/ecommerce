@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 
 exports.checkout = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { items, address, paymentMethod } = req.body; // ✅ Get items from request
 
     // 1. Use items from request body, not from Cart collection
