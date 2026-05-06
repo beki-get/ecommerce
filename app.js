@@ -27,6 +27,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
+
 /*app.get('/api/cart', (req, res) => {
   // Your cart logic here
   res.json({ items: [] });
