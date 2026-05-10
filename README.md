@@ -1,5 +1,6 @@
 E-Commerce Backend API
-A robust, scalable RESTful API built with Node.js and Express.js designed to power modern e-commerce platforms. This project focuses on automating the order lifecycle from secure authentication to payment processing and automated notifications.
+A robust, scalable RESTful API built with Node.js and Express.js designed to power modern e-commerce platforms. 
+This project focuses on automating the order lifecycle from secure authentication to payment processing and automated notifications.
 Overview
 Many local businesses still rely on manual customer management, missing out on the scalability of online ordering. 
 This project provides a digital solution that streamlines the shopping experience, allowing customers to browse, cart, and pay for items from anywhere, saving time for both the business and the consumer
