@@ -25,8 +25,8 @@ exports.initializeChapaPayment = async (req, res) => {
       email: order.userId?.email || 'customer@example.com',
       first_name: order.userId?.name || 'Customer',
       tx_ref: tx_ref,
-      callback_url: `${process.env.BACKEND_URL}/api/payment/webhook`,
-      return_url: `${process.env.FRONTEND_URL}/order-success?orderId=${order._id}`,
+      callback_url: `${backendUrl}/api/payment/webhook`,
+      return_url: `${frontendUrl}/order-success?orderId=${order._id}`,
       customization: {
         title: 'Order Payment',
         description: `Payment for Order ${order._id}`
