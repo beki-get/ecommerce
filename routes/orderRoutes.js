@@ -1,41 +1,41 @@
-//routes/orderRoutes.js
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
 const Order = require("../models/Order");
-const {authenticate} = require("../middlewares/auth");
+const { authenticate } = require("../middlewares/auth");
 const admin = require("../middlewares/admin");
-
-// Place an order (authenticated user)
-router.post("/", authenticate, async (req, res) => {
-  try {
-    const { products, totalAmount } = req.body;
-
-    const order = new Order({
-      userId: req.user.id,
-      products,
-      totalAmount
-    });
-
-    await order.save();
-    res.status(201).json(order);
-    
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
 // Get logged-in user's orders
 router.get("/my-orders", authenticate, async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.user.id);
-    const orders = await Order.find({ userId }).populate({"path": "products.productId",select:"name"}) ;
+    const userId = req.user.id || req.user._id;
+    const orders = await Order.find({ userId })
+      .populate("products.productId", "name price")
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Get single order by ID
+router.get("/:id", authenticate, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate("products.productId", "name price");
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    const currentUserId = (req.user.id || req.user._id).toString();
+    if (order.userId.toString() !== currentUserId && !req.user.isAdmin) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Get all orders (admin only) with pagination
 router.get("/all", authenticate, admin, async (req, res) => {

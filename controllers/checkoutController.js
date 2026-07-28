@@ -1,14 +1,13 @@
-//checkoutController
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 
 exports.checkout = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { items, address, paymentMethod } = req.body; // ✅ Get items from request
+    // Standardized user ID fallback
+    const userId = req.user.id || req.user._id;
+    const { items, address, paymentMethod } = req.body;
 
-    // 1. Use items from request body, not from Cart collection
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
     }
@@ -16,10 +15,10 @@ exports.checkout = async (req, res) => {
     let totalAmount = 0;
     const orderProducts = [];
 
-    // 2. Process each item: validate stock, calculate total, deduct stock
-     for (const item of items) { // ✅ Loop through req.body.items
+    // Process each item: validate stock, calculate total, deduct stock
+    for (const item of items) {
       const product = await Product.findById(item.productId);
-      const quantity = item.quantity;
+      const quantity = Number(item.quantity) || 1;
 
       if (!product) {
         return res.status(400).json({ message: `Product not found: ${item.productId}` });
@@ -38,34 +37,29 @@ exports.checkout = async (req, res) => {
       const price = product.price || 0;
       totalAmount += price * quantity;
 
-      // Push the product info for the order
       orderProducts.push({
         productId: product._id,
-        name: product.name ,
         quantity: quantity,
         price: price
-        // Note: 'name' is not stored here, but in the productId reference
       });
     }
 
-    // 3. Create the order
+    // Create the order
     const order = new Order({
       userId: userId,
       products: orderProducts,
       totalAmount: totalAmount,
-      status: 'pending', // Set initial status
+      status: 'pending',
       paymentStatus: 'pending',
       address: address,
-     paymentMethod: paymentMethod
-    
+      paymentMethod: paymentMethod || 'cod'
     });
 
     const savedOrder = await order.save();
 
-    // 4. Clear the user's cart
+    // Clear user cart
     await Cart.deleteOne({ userId });
 
-    // 5. Send success response
     res.status(201).json({
       message: 'Order created successfully',
       order: savedOrder
