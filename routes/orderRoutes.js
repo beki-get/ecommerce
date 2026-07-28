@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
 const router = express.Router();
 
 const Order = require("../models/Order");
-const auth = require("../middlewares/auth");
+const {authenticate} = require("../middlewares/auth");
 const admin = require("../middlewares/admin");
 
 // Place an order (authenticated user)
-router.post("/", auth, async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   try {
     const { products, totalAmount } = req.body;
 
@@ -27,7 +27,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Get logged-in user's orders
-router.get("/my-orders", auth, async (req, res) => {
+router.get("/my-orders", authenticate, async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
     const orders = await Order.find({ userId }).populate({"path": "products.productId",select:"name"}) ;
@@ -38,7 +38,7 @@ router.get("/my-orders", auth, async (req, res) => {
 });
 
 // Get all orders (admin only) with pagination
-router.get("/all", auth, admin, async (req, res) => {
+router.get("/all", authenticate, admin, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -63,7 +63,7 @@ router.get("/all", auth, admin, async (req, res) => {
 });
 
 // Update order status (admin only)
-router.put("/:orderId/status", auth, admin, async (req, res) => {
+router.put("/:orderId/status", authenticate, admin, async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
@@ -86,7 +86,7 @@ router.put("/:orderId/status", auth, admin, async (req, res) => {
 });
 
 // Cancel order by user (only if pending)
-router.put("/:orderId/cancel", auth, async (req, res) => {
+router.put("/:orderId/cancel", authenticate, async (req, res) => {
   const { orderId } = req.params;
 
   try {
@@ -111,7 +111,7 @@ router.put("/:orderId/cancel", auth, async (req, res) => {
 });
 
 // Update payment status (admin only)
-router.put("/:orderId/payment-status", auth, admin, async (req, res) => {
+router.put("/:orderId/payment-status", authenticate, admin, async (req, res) => {
   const { orderId } = req.params;
   const { paymentStatus } = req.body;
 

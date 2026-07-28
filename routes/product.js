@@ -2,8 +2,8 @@
 // routes/product.js
 const express = require('express');
 const router = express.Router();
-const auth = require("../middlewares/auth");   
-const admin = require("../middlewares/admin");
+const {authenticate }= require("../middlewares/auth");   
+const admin= require("../middlewares/admin");
 const {
   createProduct,
   getProducts,
@@ -12,8 +12,14 @@ const {
   deleteProduct
 } = require('../controllers/productController');
 
+console.log("Type of auth:", typeof auth);
+console.log("Type of admin:", typeof admin);
+console.log("Type of createProduct:", typeof createProduct);
+
+router.post('/', authenticate, admin, createProduct);
+
 // Create product (protected + admin only)
-router.post('/', auth, admin, createProduct);
+router.post('/', authenticate, admin, createProduct);
 
 // Read all
 router.get('/', getProducts);
@@ -22,9 +28,9 @@ router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // Update
-router.put('/:id', auth, admin, updateProduct);
+router.put('/:id', authenticate, admin, updateProduct);
 
 // Delete
-router.delete('/:id', auth, admin, deleteProduct);
+router.delete('/:id', authenticate, admin, deleteProduct);
 
 module.exports = router;

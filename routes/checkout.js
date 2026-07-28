@@ -2,9 +2,9 @@
 //routes/checkout.js
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/auth');
+const {authenticate} = require('../middlewares/auth');
 const { checkout } = require('../controllers/checkoutController');
 
-router.post('/', verifyToken, checkout);
+router.post('/', authenticate, checkout);
 
 module.exports = router;
