@@ -9,6 +9,7 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orderRoutes');
 const checkoutRoutes = require('./routes/checkout');
 const adminRoutes = require('./routes/adminRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/checkout', checkoutRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // 4. Start Server ONLY after MongoDB Connects successfully
 const PORT = process.env.PORT || 5000;
