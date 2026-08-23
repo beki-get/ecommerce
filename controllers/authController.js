@@ -10,7 +10,7 @@ let Cart = null;
 try { Cart = require('../models/cart'); } catch (_) {}
 
 const signJwt = (user) =>
-  jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '10s' });
 
 // Register
 exports.register = async (req, res) => {
